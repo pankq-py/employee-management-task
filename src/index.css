@@ -11,3 +11,55 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.LoaderModal {
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: 100%;
+  outline: none;
+  height: 100vh;
+  backdrop-filter: blur(2px);
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999999;
+  bottom: 0;
+  left: 0;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  animation: show 0.2s;
+  background: #25242440;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1);
+}
+
+.OverlayLoader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999999;
+  bottom: 0;
+  left: 0;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  animation: show 0.2s;
+  background: #ffffff00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1);
+}

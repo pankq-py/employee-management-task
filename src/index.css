@@ -18,48 +18,38 @@ code {
   box-sizing: border-box;
 }
 
-.LoaderModal {
-  background: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  width: 100%;
-  outline: none;
-  height: 100vh;
-  backdrop-filter: blur(2px);
+.fadeInAnimation {
+  opacity: 0;
+  animation: fadeIn 1s forwards;
 }
 
-.Overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 999999;
-  bottom: 0;
-  left: 0;
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-  animation: show 0.2s;
-  background: #25242440;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: scale(1);
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-.OverlayLoader {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 999999;
-  bottom: 0;
-  left: 0;
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-  animation: show 0.2s;
-  background: #ffffff00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: scale(1);
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+  transition: 0.3s;
 }

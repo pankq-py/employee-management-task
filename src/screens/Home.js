@@ -4,7 +4,11 @@ import axios from "axios"
 import MaterialTable from "@material-table/core"
 import "../styles/Home.css"
 import { MdList, MdGridView } from "react-icons/md";
+import { TbEdit, TbEye, TbTrash } from "react-icons/tb";
 import CustomLoader from "../components/CustomLoader";
+import ConfirmationModal from "../components/ConfirmationModal"
+import WarningModal from "../components/WarningModal"
+import SuccessModal from "../components/SuccessModal"
 
 const Home = () => {
     const navigate = useNavigate()
@@ -12,6 +16,64 @@ const Home = () => {
     const [employees, setEmployees] = useState([])
     const [searchId, setSearchId] = useState("")
     const [isCardView, setIsCardView] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+    const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+    const [error, setError] = useState("")
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [message, setMessage] = useState("")
+
+    const columnsData = [
+        { title: "ID", field: "id", width: "10%" },
+        {
+            title: "Avatar",
+            field: "avatar",
+            render: rowData => (
+                <div className="home_avatarTable">
+                    <img
+                        src={
+                            // rowData?.avatar ||
+                            `https://api.dicebear.com/9.x/adventurer/svg?seed=${rowData?.name}`
+                        }
+                        alt={rowData?.name}
+                    />
+                </div>
+            ),
+            width: "10%"
+        },
+        { title: "Name", field: "name", width: "20%" },
+        { title: "Email", field: "emailId", width: "25%" },
+        {
+            title: "Actions",
+            field: "actions",
+            render: rowData => (
+                <div className="home_actions">
+                    <button
+                        onClick={() => navigate(`/edit/${rowData?.id}`)}
+                        className="home_editButton"
+                        title="Edit"
+                    >
+                        <TbEdit size={20} />
+                    </button>
+                    <button
+                        onClick={() => navigate(`/employee/${rowData?.id}`)}
+                        className="home_viewButton"
+                        title="View"
+                    >
+                        <TbEye size={20} />
+                    </button>
+                    <button
+                        className="home_deleteButton"
+                        onClick={() => openDeleteModal(rowData?.id)}
+                        title="Delete"
+                    >
+                        <TbTrash size={20} />
+                    </button>
+                </div>
+            ),
+            width: "15%"
+        }
+    ]
 
     const getEmployeeData = () => {
         setIsLoading(true);
@@ -33,24 +95,67 @@ const Home = () => {
 
     const handleSearch = () => {
         if (searchId) {
+            setIsLoading(true);
             axios
                 .get(`https://669b3f09276e45187d34eb4e.mockapi.io/api/v1/employee/${searchId}`)
-                .then(response => setEmployees([response?.data ?? {}]))
-                .catch(error => console.error("Employee not found:", error))
+                .then(response => {
+                    setSearchId("")
+                    setIsLoading(false);
+                    setEmployees([response?.data ?? {}])
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                    setIsWarningModalOpen(true);
+                    setError("Employee not found!")
+                    console.error("Employee not found:", error)
+                })
         } else {
             getEmployeeData()
         }
     }
 
-    const handleDelete = (id) => {
-        axios
-            .delete(`https://669b3f09276e45187d34eb4e.mockapi.io/api/v1/employee/${id}`)
-            .then(() => setEmployees(employees?.filter(emp => emp?.id !== id)))
-            .catch(error => console.error("Error deleting employee:", error))
+    const openDeleteModal = (id) => {
+        setSelectedEmployeeId(id);
+        setIsModalOpen(true);
+    }
+
+    const closeDeleteModal = () => {
+        setIsModalOpen(false);
+        setSelectedEmployeeId(null);
+    }
+
+    const closeWarningModal = () => {
+        setIsWarningModalOpen(false);
+    }
+
+    const closeSuccessModal = () => {
+        setIsSuccessModalOpen(false);
+    }
+
+    const handleDelete = () => {
+        if (selectedEmployeeId) {
+            setIsLoading(true);
+            axios
+                .delete(`https://669b3f09276e45187d34eb4e.mockapi.io/api/v1/employee/${selectedEmployeeId}`)
+                .then(() => {
+                    setIsLoading(false);
+                    setEmployees(employees?.filter(emp => emp?.id !== selectedEmployeeId));
+                    closeDeleteModal();
+                    getEmployeeData();
+                    setTimeout(() => {
+                        setIsSuccessModalOpen(true);
+                        setMessage("Employee deleted successfully.")
+                    }, 300);
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                    console.error("Error deleting employee:", error)
+                });
+        }
     }
 
     return (
-        <div className="home_container">
+        <div className="home_container fadeInAnimation">
             <h1>Employee List</h1>
             <div className="home_searchContainer">
                 <input
@@ -59,31 +164,40 @@ const Home = () => {
                     value={searchId}
                     onChange={(e) => setSearchId(e.target.value)}
                     className="home_input"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleSearch();
+                        }
+                    }}
                 />
                 <button onClick={handleSearch} className="home_button">Search</button>
                 <button onClick={() => navigate("/add")} className="home_addButton">
                     Add Employee
                 </button>
                 <button
-                    onClick={() => setIsCardView(isCardView === "cards" ? "table" : "cards")}
-                    className="home_toggleButton"
+                    onClick={() => setIsCardView(prev => !prev)}
+                    className="home_toggleButton fadeInAnimation"
+                    title={isCardView ? "Switch to List View" : "Switch to Grid View"}
                 >
                     {
-                        isCardView === "cards" ?
-                            <MdList size={25} />
+                        isCardView ?
+                            <MdList size={25} className="fadeInAnimation" />
                             :
-                            <MdGridView size={25} />
+                            <MdGridView size={25} className="fadeInAnimation" />
                     }
                 </button>
             </div>
 
-            {isCardView === "cards" ? (
-                <div className="home_employeeList">
+            {isCardView ? (
+                <div className="home_employeeList fadeInAnimation">
                     {employees?.map(emp => (
                         <div key={emp?.id} className="home_employeeCard">
                             <div className="home_avatar">
                                 <img
-                                    src={emp?.avatar || `https://api.dicebear.com/9.x/adventurer/svg?seed=${emp?.name}`}
+                                    src={
+                                        // emp?.avatar ||
+                                        `https://api.dicebear.com/9.x/adventurer/svg?seed=${emp?.name}`
+                                    }
                                     alt={emp?.name}
                                 />
                             </div>
@@ -94,20 +208,23 @@ const Home = () => {
                                     <button
                                         onClick={() => navigate(`/edit/${emp?.id}`)}
                                         className="home_editButton"
+                                        title="Edit"
                                     >
-                                        Edit
+                                        <TbEdit size={20} />
                                     </button>
                                     <button
                                         onClick={() => navigate(`/employee/${emp?.id}`)}
                                         className="home_viewButton"
+                                        title="View"
                                     >
-                                        View
+                                        <TbEye size={20} />
                                     </button>
                                     <button
                                         className="home_deleteButton"
-                                        onClick={() => handleDelete(emp?.id)}
+                                        onClick={() => openDeleteModal(emp?.id)}
+                                        title="Delete"
                                     >
-                                        Delete
+                                        <TbTrash size={20} />
                                     </button>
                                 </div>
                             </div>
@@ -115,59 +232,38 @@ const Home = () => {
                     ))}
                 </div>
             ) : (
-                <MaterialTable
-                    title="Employee List"
-                    columns={[
-                        { title: "ID", field: "id" },
-                        {
-                            title: "Avatar",
-                            field: "avatar",
-                            render: rowData => (
-                                <img
-                                    src={rowData.avatar || `https://api.dicebear.com/9.x/adventurer/svg?seed=${rowData.name}`}
-                                    alt={rowData.name}
-                                    style={{ width: 50, height: 50, borderRadius: "50%" }}
-                                />
-                            )
-                        },
-                        { title: "Name", field: "name" },
-                        { title: "Email", field: "emailId" },
-                        {
-                            title: "Actions",
-                            field: "actions",
-                            render: rowData => (
-                                <div className="home_actions">
-                                    <button
-                                        onClick={() => navigate(`/edit/${rowData.id}`)}
-                                        className="home_editButton"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => navigate(`/employee/${rowData.id}`)}
-                                        className="home_viewButton"
-                                    >
-                                        View
-                                    </button>
-                                    <button
-                                        className="home_deleteButton"
-                                        onClick={() => handleDelete(rowData.id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            )
-                        }
-                    ]}
-                    data={employees}
-                    options={{
-                        search: false,
-                        paging: true,
-                        sorting: true
-                    }}
-                />
+                <div className="fadeInAnimation">
+                    <MaterialTable
+                        title="Employee List"
+                        columns={columnsData}
+                        data={employees}
+                        options={{
+                            search: false,
+                            paging: true,
+                            sorting: true,
+                            columnResizable: true,
+                        }}
+                    />
+                </div>
             )}
-            <CustomLoader isLoading={isLoading} />
+            <ConfirmationModal
+                isModalOpen={isModalOpen}
+                closeDeleteModal={closeDeleteModal}
+                handleDelete={handleDelete}
+            />
+            <WarningModal
+                error={error}
+                isWarningModalOpen={isWarningModalOpen}
+                closeWarningModal={closeWarningModal}
+            />
+            <SuccessModal
+                message={message}
+                isSuccessModalOpen={isSuccessModalOpen}
+                closeSuccessModal={closeSuccessModal}
+            />
+            <CustomLoader
+                isLoading={isLoading}
+            />
         </div>
     )
 }

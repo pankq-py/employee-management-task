@@ -1,0 +1,171 @@
+.addEditEmp_cardContainer {
+    max-width: 800px;
+    margin: 15px auto;
+    padding: 10px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.addEditEmp_heading {
+    margin-bottom: 20px;
+}
+
+.addEditEmp_inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.addEditEmp_inputContainerView {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.addEditEmp_input,
+.addEditEmp_select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.addEditEmp_input:read-only,
+.addEditEmp_select:read-only {
+    background-color: #f2f2f2;
+}
+
+.addEditEmp_buttonsContainer {
+    display: flex;
+    gap: 30px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.addEditEmp_button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addEditEmp_button:hover {
+    background-color: #0056b3;
+}
+
+.addEditEmp_cancelButton {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addEditEmp_cancelButton:hover {
+    background-color: #c82333;
+}
+
+.addEditEmp_viewField {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.addEditEmp_viewField label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    width: 15%;
+    text-align: left;
+}
+
+.addEditEmp_viewField span {
+    width: 5%;
+}
+
+.addEditEmp_viewField p {
+    font-size: 16px;
+    color: #000;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 80%;
+    max-width: 300px;
+    text-align: left;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .addEditEmp_cardContainer {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    .addEditEmp_inputContainer {
+        gap: 10px;
+    }
+
+    .addEditEmp_input,
+    .addEditEmp_select {
+        font-size: 12px;
+        /* padding: 8px; */
+    }
+
+    .addEditEmp_button,
+    .addEditEmp_cancelButton {
+        width: 100%;
+    }
+
+    .addEditEmp_viewField {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        text-align: center;
+        justify-content: space-between;
+    }
+
+    .addEditEmp_viewField label {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+        width: 80%;
+        text-align: left;
+    }
+
+    .addEditEmp_viewField span {
+        display: none;
+    }
+
+    .addEditEmp_viewField p {
+        font-size: 16px;
+        color: #000;
+        margin: 5px 0;
+        background-color: #f9f9f9;
+        padding: 8px 12px;
+        border-radius: 6px;
+        width: 100%;
+        max-width: 300px;
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .addEditEmp_buttonsContainer {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

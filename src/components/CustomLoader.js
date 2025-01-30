@@ -13,7 +13,7 @@ const CustomLoader = ({ isLoading }) => {
         <ReactModal
             isOpen={isLoading}
             className="LoaderModal"
-            overlayClassName="OverlayLoader"
+            overlayClassName="modal_overlay"
             ariaHideApp={false}
             shouldCloseOnOverlayClick={false}
         >

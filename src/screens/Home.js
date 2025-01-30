@@ -167,7 +167,7 @@ const Home = () => {
                     }}
                 />
             )}
-            <CustomLoader isLoading={true} />
+            <CustomLoader isLoading={isLoading} />
         </div>
     )
 }
